@@ -1,0 +1,44 @@
+<div class="page-header">
+  <h1>Activity Session #<%= @activity_session.id %></h1>
+  <h7>(Last Update: <%= @activity_session.updated_at.to_s %>)</h7>
+  <% if @activity_session.can_show_in_action? %>
+      <%= link_to "Show in Action", root_path(:aid => @activity_session.id), :class => "btn btn-mini" %> |
+  <% end %>
+  <% @activity_session.next_state_events.each do |e| %>
+      <%= link_to e.event.to_s.titleize, fire_admin_activity_session_path(@activity_session, :e => e.event), :class => "btn btn-mini", :method => :put %>
+  <% end %>
+  <%= link_to "Reset", admin_activity_session_path(@activity_session.id, :activity_session => {:state => "paused", :time_left => 0}), :method => :put, :class => "btn btn-small btn-danger" if @activity_session.next_state_events.blank? %>
+  | <%= link_to 'Edit', edit_admin_activity_session_path(@activity_session), :class => "btn btn-mini btn-info" %>
+  <%= link_to 'Destroy', admin_activity_session_path(@activity_session), confirm: 'Are you sure?', method: :delete, :class => "btn btn-mini btn-danger" %></td>
+</div>
+<p><strong>Total Time:</strong> <%= @activity_session.total_time %>m</p>
+<p><strong>Timer Increment:</strong> <%= @activity_session.timer_increment %>m</p>
+<p><strong>Time
+  Left:</strong> <%= @activity_session.time_left.to_i.eql?(0) ? @activity_session.total_time : @activity_session.time_left %>
+  m</p>
+<p><strong>State:</strong> <span class="badge"><%= @activity_session.state.titleize %></span></p>
+<hr>
+<h3>Participants</h3>
+<%= link_to 'Add new Participant', edit_admin_activity_session_path(@activity_session), :class => "btn btn-mini btn-info" %>
+<div class="clr10"></div>
+<table class="table table-striped">
+  <tr>
+    <th>Student Name</th>
+    <th>Reward</th>
+    <th>Activity Description</th>
+    <th>Needed Star Count</th>
+    <th>Earned Star Count</th>
+    <th>Actions</th>
+  </tr>
+  <% @activity_session.activity_session_rewards.each do |activity_session_reward| %>
+      <tr>
+        <td><%= activity_session_reward.user.full_name %></td>
+        <td><%= activity_session_reward.reward.name %></td>
+        <td><%= activity_session_reward.description %></td>
+        <td><%= activity_session_reward.star_count %></td>
+        <td><%= activity_session_reward.star.to_i %></td>
+        <td>
+          <%= link_to "Show Details", student_details_admin_activity_session_path(@activity_session, :uid => activity_session_reward.user.id), :class => "btn btn-mini btn-info" %>
+      </tr>
+  <% end %>
+</table>

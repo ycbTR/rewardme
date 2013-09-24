@@ -1,0 +1,34 @@
+<%- model_class = Activity -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+    <tr>
+      <th><%= "Image" %></th>
+      <th><%= model_class.human_attribute_name(:description) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:activity_session_id) %></th>
+      <th><%= model_class.human_attribute_name(:star) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+    <% @activities.each do |activity| %>
+      <tr>
+        <td><%= image_tag activity.image_url %></td>
+        <td><%= activity.description %></td>
+        <td><%= activity.user.try(:full_name) %></td>
+        <td><%= "ActivitySession##{activity.activity_session_id}" %></td>
+        <td><%= activity.star %></td>
+        <td><%=l activity.created_at %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_admin_activity_session_activity_path(activity.activity_session_id, activity.id, :uid => activity.user_id), :class => 'btn btn-mini' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      admin_activity_path(activity),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-mini btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+</table>

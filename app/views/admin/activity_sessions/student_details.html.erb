@@ -1,0 +1,41 @@
+<div class="page-header">
+  <h1> Activities of <%= @student.full_name %> for ActivitySession#<%= @activity_session.id %></h1>
+  <%= link_to "Back", admin_activity_session_path(@activity_session) %>
+</div>
+
+
+<p><strong> Reward: </strong> <%= @activity_session_reward.reward.name %> </p>
+<p><strong> Needed Star Count: </strong> <%= @activity_session_reward.star_count %>  </p>
+<p><strong> Earned Star Count: </strong> <%= @earned_star_count %> </p>
+<p><strong> Status: </strong> <span class="badge"><%= @status %></span></p>
+
+
+<fieldset>
+  <h3>Activity</h3>
+
+  <p>Image :<%= image_tag @activity_session_reward.image_url %></p>
+  <%= form_for [:admin, @activity_session], :html => {:multipart => true, :class => "form-horizontal"} do |f| %>
+      <%= f.fields_for :activity_session_rewards, @activity_session_reward do |a| %>
+          <%= a.fields_for :image do |i| %>
+              <%= i.file_field :attachment %>
+          <% end %>
+      <% end %>
+      <%= f.submit 'Update Image', :class => "btn btn-mini" %>
+  <% end %>
+
+  <p>Description :<%= @activity_session_reward.description %></p>
+
+  <p>Star :
+
+  <div style="display: inline;"
+       class='raty' id="<%= rand(19031903) %>"
+       data-score="<%= @activity_session_reward.star %>" data-number="10"
+       data-id="<%= @activity_session_reward.id %>" data-url="<%= update_rate_admin_activity_session_path(@activity_session_reward) %>">
+  </div>
+  </p>
+</fieldset>
+<script>
+    $(function () {
+        apply_raty();
+    })
+</script>

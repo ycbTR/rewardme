@@ -1,0 +1,37 @@
+<%= form_for [:admin, @user], :html => {:multipart => true, :class => 'form-horizontal'} do |f| %>
+    <%= render :partial => "shared/errors", :locals => {:target => @user} %>
+
+
+    <div class="control-group">
+      <%= f.label :full_name, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :full_name, :class => 'text_field' %>
+      </div>
+    </div>
+    <%= f.fields_for :images do |i| %>
+
+        <div class="control-group">
+          <%= i.label nil, "Avatar", :class => 'control-label' %>
+          <%= image_tag i.object.attachment.url(:thumb) %>
+          <div class="controls">
+            <%= i.file_field :attachment, :class => 'text_field' %>
+          </div>
+        </div>
+
+    <% end %>
+
+    <% if @current_user.role.eql?('admin') %>
+        <%= f.select :role, ['admin', 'teacher', 'student'] %>
+    <% else %>
+        <%= f.hidden_field :role, :value => 'student' %>
+    <% end %>
+    <%= f.hidden_field :email, :value => "#{SecureRandom.base64(15).tr('+/=', '-_ ').strip.delete("\n")}@example.net" %>
+    <%= f.hidden_field :password, :value => "12345678" %>
+    <%= f.hidden_field :password_confirmation, :value => "12345678" %>
+
+    <div class="form-actions">
+      <%= f.submit "Save", :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  admin_users_path, :class => 'btn' %>
+    </div>
+<% end %>

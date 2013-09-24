@@ -1,0 +1,129 @@
+<% if @active_session.nil? %>
+    <div class="pagination-centered">
+      <h2>There is no active activity session.</h2>
+
+      <p><%= link_to 'Click here', admin_path %> to start new activity session</p>
+    </div>
+<% else %>
+
+    <div class="row">
+      <div class="span2">
+        <div style="margin-left:-5px;">
+          <div class="canvas">
+            <%= image_tag "timer-background.png" %>
+            <canvas id="test" width="300" height="300"></canvas>
+          </div>
+          <div class="timer-actions">
+            <%= link_to "Continue", "#", :onclick => "myTime.start();", :class => "action start btn btn-success btn-small", :style => "display: none;" %>
+            <%= link_to "Pause", "#", :onclick => "myTime.stop();", :class => "action pause btn btn-small btn-warning" %>
+
+            <%= link_to "Reset", home_update_path(:id => @active_session.id, :activity_session => {:state => "started", :time_left => 0}), :method => :post, :class => "btn btn-small btn-danger" %>
+          </div>
+
+          <div id="alert" style=" left: 50%; margin-left: 35%; "></div>
+        </div>
+      </div>
+      <div class="span10">
+        <ul class="student-list">
+          <% @active_session.activity_session_rewards.each do |activity_session_reward| %>
+              <% identifier = rand(19031903) %>
+              <li class="well">
+                <div class="li-content">
+                  <div class="home-box-content">
+                    <div class="content-image" style="color:<%= current_user.settings.name_color %>">
+                      <%= image_tag activity_session_reward.user.image_url %>
+                      <b><%= activity_session_reward.user.full_name %></b>
+                    </div>
+                    <div class="hr"></div>
+                    <div class="content-image" style="color:<%= current_user.settings.reward_color %>">
+                      <%= image_tag activity_session_reward.reward.try(:image_url) %>
+                      <b><%= activity_session_reward.reward.try(:name) %> </b>
+                      <br>
+                    </div>
+                    <div class="hr"></div>
+                    <div class="content-image" style="color:<%= current_user.settings.description_color %>">
+                      <%= image_tag activity_session_reward.try(:image_url), :style => "float:left;" %>
+                      <div class="activities">
+                        <% activity_session_reward.try(:description).split("\n").each do |activty| %>
+                            <div><b><%= activty %></b></div>
+                        <% end %>
+                      </div>
+                    </div>
+                    <div class="hr"></div>
+                  </div>
+
+                  <div class="home-visual-content">
+                    <div style="display: inline;"
+                         class='home raty' id="<%= rand(19031903) %>"
+                         data-score="<%= activity_session_reward.star.to_i %>" data-number="10"
+                         data-id="<%= identifier %>" data-url="<%= update_rate_admin_activity_session_path(activity_session_reward) %>">
+
+                    </div>
+                    <div id="thermometer">
+                      <div class="top"></div>
+                      <div class="middle" id='<%= identifier %>' style="height: <%= activity_session_reward.star.to_i * 20 %>px;">
+                        <span>0%</span></div>
+                      <div class="bottom"></div>
+                    </div>
+                    <div style="display: inline;"
+                         class='home readonly raty' id="<%= rand(19031903) %>"
+                         data-score="<%= activity_session_reward.star_count %>" data-number="10">
+                    </div>
+                  </div>
+                </div>
+              </li>
+          <% end %>
+        </ul>
+      </div>
+      <!--ul-->
+    </div>
+    <script>
+        $(function () {
+            apply_raty();
+            apply_readonly_raty();
+
+            $(".action.start").click(function () {
+                $(this).hide();
+                $('.action.pause').show();
+            });
+            $(".action.pause").click(function () {
+                $(this).hide();
+                $('.action.start').show();
+            });
+            $('.raty').each(function (c, el) {
+                $(el).children().each(function (i, li) {
+                    $(el).prepend(li)
+                });
+            })
+            interval = setInterval(save_timeout(), 10000);
+        })
+
+
+        var myTime = new Timer("test", <%= @active_session.total_time.to_i * 60000 %>, <%= @active_session.timer_increment.to_i * 60000 %>,
+
+
+                function () {
+//                    $('#alert').text('Ended');
+                    $.post('<%= home_update_path(:id => @active_session.id) %>', {activity_session: {state: 'ended'}})
+                }, '<%= current_user.settings.timer_border_color || "blue" %>', '<%= current_user.settings.timer_background_color || "pink" %>');
+
+
+        myTime.setTimeLeft(<%= (@active_session.time_left.to_i.eql?(0) ? @active_session.total_time.to_i : @active_session.time_left.to_i ) * 60000 %>);
+        myTime.drawTimestep();
+        myTime.start();
+
+
+        function save_timeout() {
+            $.post('<%= home_update_path(:id => @active_session.id) %>', {activity_session: {time_left: (myTime.timeLeft() / 60000)}})
+        }
+    </script>
+
+
+    <style>
+        .student-list .well {
+            background-color: <%= current_user.settings.box_background_color || "#42C4E4" %>;
+            border: 2px solid <%= current_user.settings.box_border_color || "#E7C306" %>;
+        }
+    </style>
+<% end %>
+

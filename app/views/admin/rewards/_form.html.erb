@@ -1,0 +1,26 @@
+<%= form_for [:admin, @reward], :html => {:multipart => true, :class => 'form-horizontal'} do |f| %>
+    <div class="control-group">
+      <%= f.label :name, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :name, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <%= f.fields_for :images do |i| %>
+
+        <div class="control-group">
+          <%= i.label nil, "Image", :class => 'control-label' %>
+          <%= image_tag i.object.attachment.url(:thumb) %>
+          <div class="controls">
+            <%= i.file_field :attachment, :class => 'text_field' %>
+          </div>
+        </div>
+
+    <% end %>
+
+    <div class="form-actions">
+      <%= f.submit 'Save', :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  admin_rewards_path, :class => 'btn' %>
+    </div>
+<% end %>

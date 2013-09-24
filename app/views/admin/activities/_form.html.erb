@@ -1,0 +1,44 @@
+<%= form_for [:admin, @activity], :html => {:class => 'form-horizontal'} do |f| %>
+    <div class="control-group">
+      <%= f.label :description, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :description, :class => 'text_area', :cols => 20, :rows => 10 %>
+      </div>
+    </div>
+    <%= f.fields_for :images do |i| %>
+
+        <div class="control-group">
+          <%= i.label nil, "Image", :class => 'control-label' %>
+          <%= image_tag i.object.attachment.url(:thumb) %>
+          <div class="controls">
+            <%= i.file_field :attachment, :class => 'text_field' %>
+          </div>
+        </div>
+
+    <% end %>
+
+
+    <%= f.hidden_field :user_id, :value => params[:uid] %>
+    <%= f.hidden_field :activity_session_id, :value => params[:activity_session_id] %>
+
+    <% unless @activity.new_record? %>
+        <div class="control-group">
+          <%= f.label :star, :class => 'control-label' %>
+          <div class="controls">
+            <div style="display: inline;"
+                 class='raty' id="<%= rand(19031903) %>"
+                 data-score="<%= @activity.star %>" data-number="10"
+                 data-id="<%= @activity.id %>" data-url="<%= admin_activity_session_activity_path(@activity_session, @activity) %>">
+
+            </div>          </div>
+        </div>
+
+
+    <% end %>
+
+    <div class="form-actions">
+      <%= f.submit 'Save', :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  student_details_admin_activity_session_path(params[:activity_session_id], :uid => params[:uid]), :class => 'btn' %>
+    </div>
+<% end %>

@@ -1,0 +1,78 @@
+<%= nested_form_for [:admin, @activity_session], :html => {:multipart => true, :class => "form-horizontal"} do |f| %>
+    <%= render :partial => "shared/errors", :locals => {:target => @activity_session} %>
+
+    <div class="control-group">
+      <%= f.label :total_time, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :total_time, :class => 'text_field', :min => 0 %>  Minutes
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :timer_increment, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :timer_increment, :class => 'text_field' %> Minutes
+      </div>
+    </div>
+    <% unless @activity_session.new_record? %>
+        <div class="control-group">
+          <%= f.label :time_left, :class => 'control-label' %>
+          <div class="controls">
+            <%= f.text_field :time_left, :class => 'text_field', :placeholder => "Leave blank for default" %> Minutes
+          </div>
+        </div>
+    <% end %>
+    <div id="students">
+      <%= f.fields_for :activity_session_rewards do |r| %>
+
+          <div class="well">
+            <%= r.link_to_remove "Remove from this session", :class => "btn btn-mini pull-right #{r.object.new_record?}" %>
+            <div class="control-group">
+              <%= r.label "Student", :class => "control-label" %>
+              <div class="controls">
+                <%= r.select :user_id, User.students.collect { |u| [u.full_name, u.id] } %>
+              </div>
+            </div>
+            <div class="control-group">
+              <%= r.label "Reward", :class => "control-label" %>
+              <div class="controls">
+                <%= r.select :reward_id, Reward.all.collect { |u| [u.name, u.id] } %>
+              </div>
+            </div>
+            <div class="control-group">
+              <%= r.label "Needed Star Count For Reward", :class => "control-label" %>
+              <div class="controls">
+                <%= r.number_field :star_count, min: 0, :max => 10 %> / 10
+              </div>
+            </div>
+
+            <div class="control-group">
+              <%= r.label :description, "Activity Description", :class => 'control-label' %>
+              <div class="controls">
+                <%= r.text_area :description, :class => 'text_area', :cols => 20, :rows => 10 %>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <%= r.label :description, "Activity Image", :class => 'control-label' %>
+              <div class="controls">
+                <%= r.file_field :image_attachment, :class => 'text_area', :cols => 20, :rows => 10 %>
+              </div>
+            </div>
+
+          </div>
+
+      <% end %>
+    </div>
+    <p><%= f.link_to_add "Add a student into session", :activity_session_rewards, :class => "btn btn-success btn-small", :data => {:target => "#students"} %></p>
+
+
+    <div class="form-actions">
+      <%= f.submit "Save", :class => "btn btn-primary" %>     or <%= link_to 'Back', admin_activity_sessions_path %>
+    </div>
+<% end %>
+
+<script>
+    $(function () {
+        $('.true.remove_nested_fields').click();
+    });
+</script>

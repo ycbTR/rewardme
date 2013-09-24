@@ -1,0 +1,41 @@
+<div class="page-header">
+  <h1>Activity Sessions</h1>
+</div>
+
+<table class="table table-striped">
+  <tr>
+    <th>Event</th>
+    <th>State</th>
+    <th>Total Time</th>
+    <th>Timer Increment</th>
+    <th>Timer Left</th>
+    <th>Actions</th>
+  </tr>
+
+  <% @activity_sessions.each do |admin_activity_session| %>
+      <tr>
+        <td>
+          <% if admin_activity_session.can_show_in_action? %>
+              <%= link_to "Show in Action", root_path(:aid => admin_activity_session.id), :class => "btn btn-mini" %>
+          <% end %>
+          <% admin_activity_session.next_state_events.each do |e| %>
+              <%= link_to e.event.to_s.titleize, fire_admin_activity_session_path(admin_activity_session, :e => e.event), :class => "btn btn-mini", :method => :put %>
+          <% end %>
+          <%= 'None' if admin_activity_session.next_state_events.blank? %>
+        </td>
+        <td><span class="badge"><%= admin_activity_session.state.titleize %></span></td>
+        <td><%= admin_activity_session.total_time %> m</td>
+        <td><%= admin_activity_session.timer_increment %> m</td>
+        <td><%= admin_activity_session.time_left %> m</td>
+
+        <td>
+          <%= link_to 'Show', admin_activity_session_path(admin_activity_session), :class => "btn btn-mini" %>
+          <%= link_to 'Edit', edit_admin_activity_session_path(admin_activity_session), :class => "btn btn-mini btn-info" %>
+          <%= link_to 'Destroy', admin_activity_session_path(admin_activity_session), confirm: 'Are you sure?', method: :delete, :class => "btn btn-mini btn-danger" %></td>
+      </tr>
+  <% end %>
+</table>
+
+<br/>
+
+<%= link_to 'New Activity session', new_admin_activity_session_path, :class => "btn btn-primary" %>

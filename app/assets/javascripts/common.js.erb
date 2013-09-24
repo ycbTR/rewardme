@@ -1,0 +1,53 @@
+//= require jquery.raty.min
+
+$(function () {
+    $.fn.raty.defaults.path = ""
+    $.fn.raty.defaults.starHalf = "<%= asset_path 'star-half.png' %>";
+    $.fn.raty.defaults.starOff = "<%= asset_path 'star-off.png' %>";
+    $.fn.raty.defaults.starOn = "<%= asset_path 'star-on.png' %>";
+});
+
+apply_readonly_raty = function () {
+
+    $('.readonly.raty').raty({
+        readOnly: true,
+        hints: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'],
+        score: function () {
+            return $(this).attr('data-score');
+        },
+        number: function () {
+            return $(this).attr('data-number');
+        }
+    });
+}
+apply_raty = function () {
+
+    $('.raty').raty({
+        hints: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'],
+        score: function () {
+            return $(this).attr('data-score');
+        },
+        number: function () {
+            return $(this).attr('data-number');
+        },
+        click: function (score, evt) {
+            put_score(score, $(this).attr('data-id'), $(this).attr('data-url'))
+        }
+
+    });
+};
+function put_score(score, activity_id, url) {
+    $.ajax({
+        type: 'PUT',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('X-CSRF-Token',
+                    $('meta[name="csrf-token"]').attr('content'));
+        },
+        url: url,
+        data: {
+            rate: { star: score }
+        },
+        dataType: "script"
+    });
+    $('#' + activity_id).css('height', parseInt(score) * 20);
+}

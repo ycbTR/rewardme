@@ -1,0 +1,163 @@
+/*
+  =require twitter-bootstrap-static/bootstrap
+
+  Use Font Awesome icons (default)
+  To use Glyphicons sprites instead of Font Awesome, replace with "require twitter-bootstrap-static/sprites"
+  =require twitter-bootstrap-static/fontawesome
+  */
+
+html, body {
+    height: 100%
+}
+
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -60px;
+}
+
+#footer {
+    background-color: #f5f5f5;
+    height: 60px;
+    margin-top: 60px;
+}
+
+.footer-content {
+    margin: 20px 0;
+}
+
+.clr10 {
+    margin: 20px 0;
+}
+
+.student-list {
+    margin: 0;
+    margin-left: 100px;
+}
+
+.student-list li.well {
+    float: left;
+    list-style: none;
+    padding-bottom: 20px;
+    margin-left: 20px;
+    width: 190px;
+    height: 470px;
+    overflow: hidden;
+}
+
+div.home.raty {
+    max-width: 30px !important;
+    float: left;
+}
+
+div.home.readonly.raty {
+
+    float: right;
+    left: 175px;
+    position: absolute;
+}
+
+#thermometer {
+    z-index: 10;
+    position: relative;
+    margin-left: 75px;
+}
+
+#thermometer span {
+    display: block;
+    height: 0;
+    overflow: hidden;
+    width: 45px;
+    padding-top: 10px;
+    background-image: url(/assets/thermo-middle-top-2.png);
+    margin-top: -6px;
+}
+
+#thermometer .middle {
+    background-image: url(/assets/thermo-middle-fill-2.png);
+    position: absolute;
+    z-index: 15;
+    opacity: 1;
+    width: 45px;
+    bottom: -213px;
+}
+
+#thermometer .bottom {
+    width: 45px;
+    height: 225px;
+    position: absolute;
+    background-image: url(/assets/thermo-bottom-2.png);
+    z-index: 10;
+    opacity: 1;
+}
+
+.content-image img {
+    width: 50px;
+    height: 50px;
+}
+
+.hr {
+    margin: 5px 0;
+    border: 0;
+    border-top: 1px solid #E7C306;
+    border-bottom: 1px solid #E7C306;
+    display: block;
+    -webkit-margin-before: 0.5em;
+    -webkit-margin-after: 0.5em;
+    -webkit-margin-start: auto;
+    -webkit-margin-end: auto;
+    /*border-style: inset;*/
+    /*border-width: 1px;*/
+}
+
+.home-visual-content {
+    /*height: 240px;*/
+    /*padding-top: 57px;*/
+    position: absolute;
+    /*width: 125px;*/
+    /*display: inline;*/
+}
+
+.home-box-content {
+    height: 260px;
+}
+
+.canvas img {
+    height: 327px;
+    width: 327px;
+    left: -13px;
+    top: -14px;
+    position: absolute;
+
+}
+
+.canvas {
+    position: absolute;
+    width: 400px;
+}
+
+.timer-actions {
+    left: 50%;
+    margin-left: 35%;
+    padding-top: 315px;
+}
+
+
+.activities {
+    display: inline-block;
+    width: 130px;
+    margin-left: 10px;
+    height: 100px;
+}
+
+.activities li {
+    float: left;
+    padding-bottom: 8px;
+    margin-left: 10px;
+    font-size:12px;
+}
+
+.content-image {
+    display: inline;
+}
