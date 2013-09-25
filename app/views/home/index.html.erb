@@ -7,7 +7,7 @@
 <% else %>
 
     <div class="row">
-      <div class="span2">
+      <div class="span3">
         <div style="margin-left:-5px;">
           <div class="canvas">
             <%= image_tag "timer-background.png" %>
@@ -23,7 +23,7 @@
           <div id="alert" style=" left: 50%; margin-left: 35%; "></div>
         </div>
       </div>
-      <div class="span10">
+      <div class="span9">
         <ul class="student-list">
           <% @active_session.activity_session_rewards.each do |activity_session_reward| %>
               <% identifier = rand(19031903) %>
